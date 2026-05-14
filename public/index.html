@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Teste</title>
+    <link rel="stylesheet" href="site.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="#">
+                <img src="img/panther.png" class="logo">
+            </a>
+            <ul class="menu">
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#contatos">Contatos</a></li>
+                <li><a href="#projetos">Projetos</a></li>
+                <button id="lerTexto" aria-label="Ler texto"><span
+                        class="material-symbols-sharp">ear_sound</span></button>
+                <button id="tema" aria-label="Alternar tema"><span
+                        class="material-symbols-outlined">light_mode</span></button>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <section class="sobre" id="sobre">
+            <h1>Sara da Silva Leite</h1>
+
+            <p>Sou graduanda em Gestão de Tecnologia da Informação pela Fatec Jahu e técnica em Desenvolvimento de
+                Sistemas. Atualmente, atuo no Serviço Autônomo de Água e Esgoto (SAAE), onde contribuo no
+                desenvolvimento de sistemas internos e participo de projetos voltados ao controle de consumo.
+                Tenho experiência com tecnologias Front-End, como HTML, CSS, JavaScript e React, buscando sempre criar
+                soluções que aliam raciocínio lógico a um design intuitivo.
+                Além da base técnica, possuo conhecimentos em UX/UI e utilizo ferramentas como Figma e Trello, com foco
+                em desenvolver sistemas funcionais, organizados e visualmente atraentes.</p>
+
+            <div class="timeline" id="timeline">
+                <div class="linha"></div>
+
+                <div class="item">
+                    <div class="circulo">
+                        <span class="material-symbols-sharp">backpack</span>
+                    </div>
+                    <p><strong>Fevereiro 2022</strong><br>Início Ensino Médio</p>
+                </div>
+
+                <div class="item">
+                    <div class="circulo">
+                        <span class="material-symbols-sharp">description</span>
+                    </div>
+                    <p><strong>Janeiro 2024</strong><br>Curso Desenvolvimento de Sistemas</p>
+                </div>
+
+                <div class="item">
+                    <div class="circulo">
+                        <span class="material-symbols-sharp">work</span>
+                    </div>
+                    <p><strong>Novembro 2024</strong><br>Primeira experiência profissional (SAAE)</p>
+                </div>
+
+                <div class="item">
+                    <div class="circulo">
+                        <span class="material-symbols-sharp">school</span>
+                    </div>
+                    <p><strong>Dezembro 2024</strong><br>Conclusão Ensino Médio</p>
+                </div>
+
+                <div class="item">
+                    <div class="circulo">
+                        <span class="material-symbols-sharp">school</span>
+                    </div>
+                    <p><strong>Julho 2025</strong><br>Apresentação TCC e conclusão de curso</p>
+                </div>
+                <div class="item">
+                    <div class="circulo">
+                        <span class="material-symbols-sharp">description</span>
+                    </div>
+                    <p><strong>Agosto 2025</strong><br>Cursando Gestão de Tecnologia da Informação</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="contatos" id="contatos">
+            <h1>Contatos</h1>
+
+            <p>Clique na Imagem e veja mais detalhes</p>
+
+            <img class="fotoPerfil" src="img/saraModal.jpeg" alt="Sara" style="cursor: pointer;"
+                onclick="abrirModalAtividades('sara')">
+
+            <div class="redes">
+
+                <a href="https://instagram.com/srlit_" target="_blank">
+                    <i class="fa-brands fa-instagram"></i>
+                    <span>Instagram</span>
+                </a>
+
+                <a href="https://linkedin.com/in/srlit" target="_blank">
+                    <i class="fa-brands fa-linkedin"></i>
+                    <span>LinkedIn</span>
+                </a>
+
+                <a href="https://github.com/SaraSLeite" target="_blank">
+                    <i class="fa-brands fa-github"></i>
+                    <span>Github</span>
+                </a>
+
+                <a href="https://discord.com/users/885874199569256459" target="_blank">
+                    <i class="fa-brands fa-discord"></i>
+                    <span>Discord</span>
+                </a>
+
+            </div>
+
+        </section>
+
+        <section class="projetos" id="projetos">
+            <h1>Projetos</h1>
+            <p>Lista de projetos desenvolvidos</p>
+        </section>
+
+    </main>
+
+
+    <div id="modalAtividades" class="modal-overlay">
+        <div class="modal-content">
+            <span id="closeModalAtividades" class="close-button">&times;</span>
+            <div class="modal-body">
+                <img src="" alt="foto" class="modalAtividadesImg">
+                <div class="modal-info">
+                    <h2 id="modalAtividadesNome"></h2>
+                    <h3 id="modalAtividadesCargo"></h3>
+                    <p id="modalAtividadesDescricao"></p>
+                    <div class="social-icons"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="scripts.js"></script>
+
+</body>
+
+</html>
