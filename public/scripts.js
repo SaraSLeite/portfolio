@@ -1,166 +1,192 @@
-// Animação de seções
-const sections = document.getElementsByTagName("section");
-const observer = new IntersectionObserver((entries) => {
-
+// Animações de entrada progressivas, respeitando a preferência por movimento reduzido.
+const sections = document.querySelectorAll('main > section');
+if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-
-        if (entry.isIntersecting) {
-            entry.target.classList.add("active");
-        }
-
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+        observer.unobserve(entry.target);
+      }
     });
-
-}, {
-    threshold: 0.2
-});
-
-for (let section of sections) {
-    observer.observe(section);
-}
-
-const botao = document.getElementById("tema");
-
-const icone =
-    botao.getElementsByTagName("span")[0];
-
-if (localStorage.getItem("tema") === "dark") {
-
-    document.body.classList.add("dark");
-
-    icone.textContent = "dark_mode";
-
+  }, { threshold: 0.08 });
+  sections.forEach((section) => observer.observe(section));
 } else {
-
-    icone.textContent = "light_mode";
-
+  sections.forEach((section) => section.classList.add('active'));
 }
 
-botao.addEventListener("click", () => {
-
-    document.body.classList.toggle("dark");
-
-    if (document.body.classList.contains("dark")) {
-
-        localStorage.setItem("tema", "dark");
-
-        icone.textContent = "dark_mode";
-
-    } else {
-
-        localStorage.setItem("tema", "light");
-
-        icone.textContent = "light_mode";
-
-    }
-
-});
-
-//Audiodescrição
-
-const botaoLer =
-    document.getElementById("lerTexto");
-
-botaoLer.addEventListener("click", () => {
-
-    speechSynthesis.cancel();
-
-    const texto =
-        document
-            .getElementsByClassName("sobre")[0]
-            .getElementsByTagName("p")[0]
-            .textContent;
-
-    const fala =
-        new SpeechSynthesisUtterance(texto);
-
-    fala.lang = "pt-BR";
-    fala.rate = 1;
-    fala.pitch = 1;
-    fala.volume = 1;
-
-    speechSynthesis.speak(fala);
-
-});
-
-
-
-// modal de atividades
-const pessoas = [
-    {
-        nome: 'sara',
-        title: 'Atividades de Sara',
-        subtitle: 'Desenvolvedora de Sistemas',
-        text: 'Sara foi responsável pelas artes, desenvolvendo grande parte das sprites necessárias pra dar vida ao jogo.',
-        social: `
-        <a href="mailto:saraleite2708@gmail.com" target="_blank">
-            <i class="fa-solid fa-envelope"></i>
-        </a>
-
-        <a href="https://wa.me/5514997842273?text=Olá,%20vim%20pelo%20site!" target="_blank">  
-            <i class="fa-brands fa-whatsapp"></i>
-        </a>
-    `,
-        imgSrc: 'img/saraModal.jpeg'
-    }
-];
-
-
-function abrirModalAtividades(nome) {
-    const pessoa = pessoas.find(p => p.nome === nome);
-
-
-    document.getElementById('modalAtividadesNome').textContent = pessoa.title;
-    document.getElementById('modalAtividadesCargo').textContent = pessoa.subtitle;
-    document.getElementById('modalAtividadesDescricao').textContent = pessoa.text;
-    document.querySelector('.social-icons').innerHTML = pessoa.social;
-    document.querySelector('.modalAtividadesImg').src = pessoa.imgSrc;
-    document.getElementById('modalAtividades').style.display = 'flex';
+// Tema escuro por padrão, com preferência salva no navegador.
+const themeButton = document.getElementById('tema');
+const themeIcon = themeButton?.querySelector('span');
+function applyTheme(theme) {
+  const light = theme === 'light';
+  document.body.classList.toggle('light-theme', light);
+  if (themeIcon) themeIcon.textContent = light ? 'dark_mode' : 'light_mode';
+  themeButton?.setAttribute('aria-label', light ? 'Ativar tema escuro' : 'Ativar tema claro');
 }
-
-function closeModalAtividades() {
-    document.getElementById('modalAtividades').style.display = 'none';
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const closeBtn = document.getElementById('closeModalAtividades');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeModalAtividades);
-    }
-
-    const modal = document.getElementById('modalAtividades');
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModalAtividades();
-            }
-        });
-    }
+applyTheme(localStorage.getItem('temaPortfolio') || 'dark');
+themeButton?.addEventListener('click', () => {
+  const next = document.body.classList.contains('light-theme') ? 'dark' : 'light';
+  localStorage.setItem('temaPortfolio', next);
+  applyTheme(next);
 });
 
-window.abrirModalAtividades = abrirModalAtividades;
-window.closeModalAtividades = closeModalAtividades;
+// Leitura em voz alta da apresentação.
+const readButton = document.getElementById('lerTexto');
+readButton?.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const text = document.querySelector('.hero-description')?.textContent + ' ' + document.querySelector('.intro-copy')?.innerText;
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = 'pt-BR'; speech.rate = 1; speech.pitch = 1;
+  window.speechSynthesis.speak(speech);
+});
 
-//timeline scroll horizontal
-const timeline = document.getElementById("timeline");
+// Menu responsivo.
+const menuToggle = document.getElementById('menuToggle');
+const menu = document.getElementById('menu');
+menuToggle?.addEventListener('click', () => {
+  const opened = menu?.classList.toggle('is-open') ?? false;
+  menuToggle.setAttribute('aria-expanded', String(opened));
+  const icon = menuToggle.querySelector('span');
+  if (icon) icon.textContent = opened ? 'close' : 'menu';
+});
+menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+  menu.classList.remove('is-open');
+  menuToggle?.setAttribute('aria-expanded', 'false');
+  const icon = menuToggle?.querySelector('span');
+  if (icon) icon.textContent = 'menu';
+}));
 
-timeline.addEventListener("wheel", (event) => {
+// Linha do tempo: setas e roda do mouse, além de swipe nativo em dispositivos móveis.
+const timeline = document.getElementById('timeline');
+document.getElementById('timelinePrev')?.addEventListener('click', () => timeline?.scrollBy({ left: -250, behavior: 'smooth' }));
+document.getElementById('timelineNext')?.addEventListener('click', () => timeline?.scrollBy({ left: 250, behavior: 'smooth' }));
+timeline?.addEventListener('wheel', (event) => {
+  if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
     event.preventDefault();
+    timeline.scrollLeft += event.deltaY;
+  }
+}, { passive: false });
 
-    timeline.scrollLeft += event.deltaY * 0.8;
+// Galeria interativa dos projetos.
+const galleryModal = document.getElementById('galleryModal');
+const galleryTitle = document.getElementById('galleryTitle');
+const galleryDescription = document.getElementById('galleryDescription');
+const galleryCounter = document.getElementById('galleryCounter');
+const galleryImage = document.getElementById('galleryImage');
+const galleryDots = document.getElementById('galleryDots');
+const galleryStage = document.getElementById('galleryStage');
+const galleryPrev = document.getElementById('galleryPrev');
+const galleryNext = document.getElementById('galleryNext');
+const galleryGithub = document.getElementById('galleryGithub');
+
+const projectGalleries = {
+  srlitflix: {
+    title: 'SrlitFlix',
+    description: 'Aplicação de busca e descoberta de filmes e séries, com interface própria e integração com catálogo de títulos.',
+    github: 'https://github.com/SaraSLeite',
+    images: [
+      { src: 'img/projects/srlitflix-busca.png', alt: 'Tela de pesquisa do SrlitFlix, com campo de busca em destaque.' },
+      { src: 'img/projects/srlitflix-catalogo.png', alt: 'Catálogo do SrlitFlix com fileiras de filmes e séries em destaque.' },
+      { src: 'img/projects/srlitflix-destaque.png', alt: 'Tela inicial do SrlitFlix com destaque para uma série e navegação por setas.' }
+    ]
+  },
+  gcook: {
+    title: 'GCook',
+    description: 'Projeto web de receitas e exploração culinária. A galeria será preenchida com as capturas de tela do projeto assim que você as enviar.',
+    github: 'https://github.com/SaraSLeite',
+    images: []
+  },
+  saae: {
+    title: 'Sistemas internos · SAAE',
+    description: 'Interfaces web para cadastro e inspeção de Poços de Visita (PV), com formulários para redes de água e esgoto, localização, coordenadas e registro visual por croqui e fotografias.',
+    github: 'https://github.com/SaraSLeite',
+    images: [
+      { src: 'img/projects/saae/saae-inicio.png', alt: 'Tela inicial da Ficha de Inspeção de Poço de Visita, com opções para PV de água, PV de esgoto, registros e consulta de cadastros.' },
+      { src: 'img/projects/saae/saae-pv-esgoto.png', alt: 'Formulário PV de Esgoto com campos de identificação, município, responsável e localização.' },
+      { src: 'img/projects/saae/saae-croqui-fotos.png', alt: 'Seção do formulário com coordenadas, entradas e saídas, editor de croqui e área para adicionar fotografias.' }
+    ]
+  }
+};
+let activeGallery = null;
+let activeGalleryIndex = 0;
+let previousFocus = null;
+
+function renderGallery() {
+  if (!activeGallery) return;
+  const images = activeGallery.images;
+  const hasImages = images.length > 0;
+  galleryTitle.innerHTML = `${activeGallery.title}<span>.</span>`;
+  galleryDescription.textContent = activeGallery.description;
+  galleryGithub.href = activeGallery.github;
+  galleryImage.hidden = !hasImages;
+  galleryPrev.hidden = !hasImages;
+  galleryNext.hidden = !hasImages;
+  galleryDots.replaceChildren();
+  galleryStage.classList.toggle('gallery-empty', !hasImages);
+
+  if (!hasImages) {
+    galleryStage.querySelector('.gallery-empty-message')?.remove();
+    const message = document.createElement('div');
+    message.className = 'gallery-empty-message';
+    message.innerHTML = '<span>IMAGENS EM BREVE</span><strong>Esta galeria está sendo preparada.</strong><p>Quando você enviar as capturas deste projeto, elas aparecerão aqui para navegar.</p>';
+    galleryStage.append(message);
+    galleryCounter.textContent = 'EM BREVE';
+    return;
+  }
+  galleryStage.querySelector('.gallery-empty-message')?.remove();
+  activeGalleryIndex = (activeGalleryIndex + images.length) % images.length;
+  const image = images[activeGalleryIndex];
+  galleryImage.src = image.src;
+  galleryImage.alt = image.alt;
+  galleryCounter.textContent = `${String(activeGalleryIndex + 1).padStart(2, '0')} / ${String(images.length).padStart(2, '0')}`;
+  images.forEach((item, index) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'gallery-dot' + (index === activeGalleryIndex ? ' is-active' : '');
+    dot.setAttribute('aria-label', `Ver imagem ${index + 1}`);
+    dot.setAttribute('aria-current', index === activeGalleryIndex ? 'true' : 'false');
+    dot.addEventListener('click', () => { activeGalleryIndex = index; renderGallery(); });
+    galleryDots.append(dot);
+  });
+}
+function openGallery(projectKey) {
+  const project = projectGalleries[projectKey];
+  if (!project || !galleryModal) return;
+  previousFocus = document.activeElement;
+  activeGallery = project;
+  activeGalleryIndex = 0;
+  renderGallery();
+  galleryModal.classList.add('is-open');
+  galleryModal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('gallery-is-open');
+  galleryModal.querySelector('.gallery-close')?.focus();
+}
+function closeGallery() {
+  if (!galleryModal) return;
+  galleryModal.classList.remove('is-open');
+  galleryModal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('gallery-is-open');
+  previousFocus?.focus?.();
+}
+function moveGallery(direction) {
+  if (!activeGallery?.images.length) return;
+  activeGalleryIndex = (activeGalleryIndex + direction + activeGallery.images.length) % activeGallery.images.length;
+  renderGallery();
+}
+document.querySelectorAll('[data-project]').forEach((button) => button.addEventListener('click', () => openGallery(button.dataset.project)));
+galleryModal?.querySelectorAll('[data-gallery-close]').forEach((element) => element.addEventListener('click', closeGallery));
+galleryPrev?.addEventListener('click', () => moveGallery(-1));
+galleryNext?.addEventListener('click', () => moveGallery(1));
+document.addEventListener('keydown', (event) => {
+  if (!galleryModal?.classList.contains('is-open')) return;
+  if (event.key === 'Escape') closeGallery();
+  if (event.key === 'ArrowLeft') moveGallery(-1);
+  if (event.key === 'ArrowRight') moveGallery(1);
 });
-
-
-// Touch para mobile (swipe)
 let touchStartX = 0;
-let touchScrollLeft = 0;
-
-timeline.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].pageX;
-    touchScrollLeft = timeline.scrollLeft;
-});
-
-timeline.addEventListener('touchmove', (e) => {
-    const touchCurrentX = e.touches[0].pageX;
-    const walk = (touchStartX - touchCurrentX) * 1.5;
-    timeline.scrollLeft = touchScrollLeft + walk;
-});
+galleryStage?.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0].clientX; }, { passive: true });
+galleryStage?.addEventListener('touchend', (event) => {
+  const delta = event.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(delta) > 45) moveGallery(delta < 0 ? 1 : -1);
+}, { passive: true });
