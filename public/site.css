@@ -149,6 +149,26 @@ body:before {
     justify-content: space-between
 }
 
+.btn-curriculo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #e32636;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  border: 1px solid #e32636;
+  border-radius: 6px;
+  transition: 0.3s ease;
+}
+
+.btn-curriculo:hover {
+  background: transparent;
+  color: #e32636;
+  transform: translateY(-2px);
+}
+
 .hero-topline,
 .hero-bottomline {
     display: flex;
@@ -1190,7 +1210,7 @@ body.light-theme .site-header {
 }
 
 body.light-theme .menu a {
-    color: #242124
+    color: #242124;
 }
 
 body.light-theme .brand {
@@ -1209,7 +1229,8 @@ body.light-theme .hero-art {
 body.light-theme .hero-description,
 body.light-theme .intro-copy p,
 body.light-theme .timeline-item p,
-body.light-theme .project-meta p {
+body.light-theme .project-meta p,
+body.light-theme .education-footer p {
     color: #625b5d
 }
 
@@ -2016,7 +2037,7 @@ body.light-theme .gallery-empty-message p {
 .srlit-mascot-button {
     position: relative;
     display: block;
-    width: 100%;
+    width: 85%;
     aspect-ratio: 1;
     border: 0;
     padding: 0;
@@ -2041,23 +2062,34 @@ body.light-theme .gallery-empty-message p {
     filter: drop-shadow(0 10px 18px rgba(243, 38, 63, .24));
     outline: none;
 }
-
 .srlit-mascot-hint {
     position: absolute;
     bottom: calc(100% - 6px);
     right: 0;
-    max-width: 220px;
-    padding: 8px 11px;
+    width: max-content;
+    max-width: 260px;
+    box-sizing: border-box;
+    padding: 10px 13px;
     background: #151315;
     border: 1px solid #493238;
     color: #f5f3f2;
-    font: 9px var(--mono);
+    font: 9px/1.6 var(--mono);
     letter-spacing: .025em;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: break-word;
+    text-align: center;
     opacity: 0;
     transform: translateY(5px);
     transition: opacity .2s ease, transform .2s ease;
     pointer-events: none;
+}
+
+.srlit-mascot-hint .hint-extra {
+    display: block;
+    margin-top: 6px;
+    color: #b9afb2;
+    font-size: 8px;
+    line-height: 1.5;
 }
 
 .srlit-mascot:hover .srlit-mascot-hint,
@@ -2067,39 +2099,37 @@ body.light-theme .gallery-empty-message p {
 }
 
 @keyframes srlit-mascot-float {
-
-    0%,
-    100% {
-        translate: 0 0
+    0%, 100% {
+        translate: 0 0;
     }
 
     50% {
-        translate: 0 -5px
+        translate: 0 -5px;
     }
 }
 
-@media(max-width:640px) {
+@media (max-width: 640px) {
     .srlit-mascot {
         width: clamp(88px, 25vw, 124px);
         right: 5px;
-        bottom: 4px
+        bottom: 4px;
     }
 
     .srlit-mascot-hint {
-        font-size: 8px;
-        max-width: 185px;
+        max-width: min(230px, 72vw);
         white-space: normal;
-        text-align: center
+        text-align: center;
+        font-size: 8px;
     }
 }
 
-@media(prefers-reduced-motion:reduce) {
+@media (prefers-reduced-motion: reduce) {
     .srlit-mascot-button {
         animation: none;
-        transition: none
+        transition: none;
     }
 
     .srlit-mascot-hint {
-        transition: none
+        transition: none;
     }
 }
