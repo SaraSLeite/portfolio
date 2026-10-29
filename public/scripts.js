@@ -190,3 +190,67 @@ galleryStage?.addEventListener('touchend', (event) => {
   const delta = event.changedTouches[0].clientX - touchStartX;
   if (Math.abs(delta) > 45) moveGallery(delta < 0 ? 1 : -1);
 }, { passive: true });
+
+
+// Mascote: pisca em intervalos variáveis e sorri ao interagir.
+(() => {
+  const mascot = document.getElementById('srlitMascot');
+  const button = document.getElementById('srlitMascotButton');
+  const image = document.getElementById('srlitMascotImage');
+  if (!mascot || !button || !image) return;
+
+  const expressions = {
+    normal: 'img/srlitPerson/normal.png',
+    happy: 'img/srlitPerson/feliz.png',
+    blink: 'img/srlitPerson/piscando.png',
+    happyBlink: 'img/srlitPerson/feliz-piscando.png'
+  };
+  let hovered = false;
+  let timer = null;
+  let isBlinking = false;
+
+  function showExpression(expression) {
+    const nextSrc = expressions[expression] || expressions.normal;
+    if (image.getAttribute('src') !== nextSrc) image.src = nextSrc;
+    image.dataset.expression = expression;
+  }
+
+  function scheduleBlink() {
+    window.clearTimeout(timer);
+    if (hovered || document.hidden || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      timer = window.setTimeout(scheduleBlink, 2500);
+      return;
+    }
+    timer = window.setTimeout(() => {
+      isBlinking = true;
+      showExpression('blink');
+      window.setTimeout(() => {
+        isBlinking = false;
+        showExpression(hovered ? 'happy' : 'normal');
+        scheduleBlink();
+      }, 160);
+    }, 2400 + Math.random() * 2600);
+  }
+
+  button.addEventListener('pointerenter', () => {
+    hovered = true;
+    window.clearTimeout(timer);
+    showExpression('happy');
+  });
+  button.addEventListener('pointerleave', () => {
+    hovered = false;
+    if (!isBlinking) showExpression('normal');
+    scheduleBlink();
+  });
+  button.addEventListener('focus', () => { hovered = true; showExpression('happy'); });
+  button.addEventListener('blur', () => { hovered = false; showExpression('normal'); scheduleBlink(); });
+  button.addEventListener('click', () => {
+    showExpression('happy');
+    button.setAttribute('aria-label', 'A personagem está feliz! Passe o mouse para interagir novamente');
+    window.setTimeout(() => button.setAttribute('aria-label', 'Interagir com a personagem'), 1400);
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) scheduleBlink();
+  });
+  scheduleBlink();
+})();

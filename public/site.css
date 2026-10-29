@@ -290,14 +290,13 @@ body:before {
     mask-image: linear-gradient(transparent, black 15%, black 85%, transparent)
 }
 
-.srlit {
+.hero-panther {
     width: min(78%, 370px);
     max-height: 340px;
     object-fit: contain;
     filter: drop-shadow(0 18px 45px rgba(243, 38, 63, .16));
     z-index: 2;
-    animation: float 6s ease-in-out infinite;
-    border-radius: 50%;
+    animation: float 6s ease-in-out infinite
 }
 
 .art-ring {
@@ -1390,7 +1389,7 @@ body.light-theme .social-icons a {
         min-height: 300px
     }
 
-    .srlit {
+    .hero-panther {
         max-height: 245px
     }
 
@@ -1998,4 +1997,109 @@ body.light-theme .gallery-empty-message p {
 .gallery-stage img[hidden],
 .gallery-stage button[hidden] {
     display: none !important
+}
+
+
+/* Mascote interativa da Sara */
+.srlit-mascot {
+    position: fixed;
+    z-index: 900;
+    right: clamp(10px, 2.2vw, 30px);
+    bottom: 8px;
+    width: clamp(108px, 15vw, 178px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+}
+
+.srlit-mascot-button {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto;
+    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, .28));
+    animation: srlit-mascot-float 4.5s ease-in-out infinite;
+    transition: transform .22s ease, filter .22s ease;
+}
+
+.srlit-mascot-button img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.srlit-mascot-button:hover,
+.srlit-mascot-button:focus-visible {
+    transform: translateY(-6px) scale(1.04);
+    filter: drop-shadow(0 10px 18px rgba(243, 38, 63, .24));
+    outline: none;
+}
+
+.srlit-mascot-hint {
+    position: absolute;
+    bottom: calc(100% - 6px);
+    right: 0;
+    max-width: 220px;
+    padding: 8px 11px;
+    background: #151315;
+    border: 1px solid #493238;
+    color: #f5f3f2;
+    font: 9px var(--mono);
+    letter-spacing: .025em;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity .2s ease, transform .2s ease;
+    pointer-events: none;
+}
+
+.srlit-mascot:hover .srlit-mascot-hint,
+.srlit-mascot:focus-within .srlit-mascot-hint {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes srlit-mascot-float {
+
+    0%,
+    100% {
+        translate: 0 0
+    }
+
+    50% {
+        translate: 0 -5px
+    }
+}
+
+@media(max-width:640px) {
+    .srlit-mascot {
+        width: clamp(88px, 25vw, 124px);
+        right: 5px;
+        bottom: 4px
+    }
+
+    .srlit-mascot-hint {
+        font-size: 8px;
+        max-width: 185px;
+        white-space: normal;
+        text-align: center
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    .srlit-mascot-button {
+        animation: none;
+        transition: none
+    }
+
+    .srlit-mascot-hint {
+        transition: none
+    }
 }

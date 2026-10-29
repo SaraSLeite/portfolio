@@ -1,0 +1,8 @@
+// rodar a aplicação.
+
+-> node server.js
+
+// git config
+
+git config --global user.name SaraSLeite
+git config --global user.email saraleite2708@gmail.com
